@@ -15,7 +15,7 @@ Contains all TPs done in the context of Big Data Framework courses [M2 Datascien
 
 ## TP2: First Map/Reduce Algorithm
 
-__On progress...__ 
+__Purpose__ = Using Map/Reduce functions write a pseudo code which invert the line and column of a csv file .<br /> 
 
   
 ### Authors
