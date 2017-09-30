@@ -1,0 +1,64 @@
+Purpose = perform the below transformation using as input a CSV file:
+
+ti, to, tu    ==>	ti, bi, di
+bi, bo, bu    ==>	to, bo, do
+di, do, du    ==>	tu, bu, du
+
+
+
+Pseudo-code =
+
+
+# Load the CSV data into a RDD
+[0]  data = sc.textFile("/FileStore/csv_sample.csv")
+
+out: [u'ti,to,tu', u'bi,bo,bu', u'di,do,du']
+
+
+# Split the result rdd when ',' character occurs 
+[1]  rdd1 = data.map(lambda l: (l.split(",")))
+
+out: [[u'ti', u'to', u'tu'], [u'bi', u'bo', u'bu'], [u'di', u'do', u'du']]
+
+
+# The 'inner' map will transform each element for example 'ti' into a (key,value) : (0,ti) where 0 is the index
+# The flatMap will compute the previous action for each line and flattened the result.
+[2]  rdd2 = rdd1.flatMap(lambda line: (line.map(lambda col: (line.indexOf(col), col))))
+
+out: [((0,'ti'), (1,'to'), (2,'tu'), (0,'bi'), (1,'bo'), (2,'bu'), (0,'di'), (1,'do'), (2,'du')]
+
+
+# groupByKey will regroup all value having the same key and return (key,value) object
+[3]  rdd3 = rdd2.groupByKey
+
+out: [((0,('ti', 'bi', 'di')), (1,('to', 'bo', 'do')), (2,('tu', 'bu', 'du'))]
+
+
+# Drop the index of each (key,value) in order to obtain only the value.
+[4]  rdd4 = rdd3.map(lambda x,y: y)
+
+out: [('ti', 'bi', 'di'), ('to', 'bo', 'do'), ('tu', 'bu', 'du')]
+
+
+
+
+
+
+Pseudo-code (bis) =
+
+
+
+data = sc.textFile("/FileStore/csv_sample.csv")
+
+rdd1 = data.map(lambda l: (l.split(",")))
+
+def map(line,col):
+   line.map(lambda col: (line.indexOf(col), col))
+   return 
+
+rdd2 = rdd1.flatMap(lambda line: (line.map))
+
+
+
+
+
