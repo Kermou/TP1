@@ -64,15 +64,15 @@ public class MatrixTranspose {
 
         public void reduce(LongWritable key, Iterable<MapWritable> maps, Context context) throws IOException, InterruptedException {
 
-            SortedMap<LongWritable, IntWritable> rdds = new TreeMap<LongWritable,IntWritable>();
+            SortedMap<LongWritable, Text> rdds = new TreeMap<>();
             for (MapWritable mw : maps) {
                 for(Entry<Writable, Writable>  entry : mw.entrySet()) {
-                    rdds.put((LongWritable) entry.getKey(), (IntWritable) entry.getValue());
+                    rdds.put((LongWritable) entry.getKey(), (Text) entry.getValue());
                 }
             }
 
             StringBuffer buffer = new StringBuffer();
-            for(IntWritable rdd : rdds.values()) {
+            for(Text rdd : rdds.values()) {
                 buffer.append(rdd.toString());
                 buffer.append(",");
             }
